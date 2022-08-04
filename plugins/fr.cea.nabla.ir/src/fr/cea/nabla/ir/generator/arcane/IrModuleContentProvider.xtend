@@ -211,7 +211,7 @@ class IrModuleContentProvider
 		«IF ts.constExpr || ts.option»
 
 			// constant time step
-			m_global_deltat = «ts.codeName»;
+			m_global_delta_t = «ts.codeName»;
 		«ENDIF»
 		«FOR p : externalProviders»
 			«val optionName = StringExtensions.separateWithUpperCase(p.extensionName)»

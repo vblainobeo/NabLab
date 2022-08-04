@@ -9,7 +9,7 @@ from cartesianmesh2d import CartesianMesh2D
 class Variables:
 	maxTime = 0.1
 	maxIter = 500
-	deltat = 1.0
+	delta_t = 1.0
 	t = 0.0
 	constexprDim = 2
 	constexprVec = np.array([1.1, 1.1], dtype=np.double)
