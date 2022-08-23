@@ -45,7 +45,7 @@ class NablagenValidatorTest
 
 	let real maxTime = 0.1;
 	let int maxIter = 500;
-	let real δt = 1.0;
+	let real delta_t = 1.0;
 
 	real t;
 	real[2] X{nodes};
@@ -53,9 +53,9 @@ class NablagenValidatorTest
 
 	iterate n while (n+1 < maxIter && t^{n+1} < maxTime);
 
-	Hj1: ∀c∈cells(), hv3{c} = hv2{c};
-	Hj2: ∀c∈cells(), hv5{c} = hv3{c};
-	Hj3: ∀c∈cells(), hv7{c} = hv4{c} + hv5{c} + hv6{c};
+	Hj1: forall c in cells(), hv3{c} = hv2{c};
+	Hj2: forall c in cells(), hv5{c} = hv3{c};
+	Hj3: forall c in cells(), hv7{c} = hv4{c} + hv5{c} + hv6{c};
 	'''
 
 	val nablaRemapModel =
@@ -67,8 +67,8 @@ class NablagenValidatorTest
 	real[2] X{nodes};
 	real rv1{cells}, rv2{cells}, rv3{cells};
 
-	Rj1: ∀c∈cells(), rv2{c} = rv1{c};
-	Rj2: ∀c∈cells(), rv3{c} = rv2{c};
+	Rj1: forall c in cells(), rv2{c} = rv1{c};
+	Rj2: forall c in cells(), rv3{c} = rv2{c};
 	'''
 
 	val ngenModel = 
@@ -79,7 +79,7 @@ class NablagenValidatorTest
 	{
 		nodeCoord = X;
 		time = t;
-		timeStep = δt;
+		timeStep = delta_t;
 	}
 
 	AdditionalModule Remap r1
@@ -167,7 +167,7 @@ class NablagenValidatorTest
 				CMAKE_CXX_COMPILER = "/usr/bin/g++";
 			}')
 
-		val okNgenModel = koNgenModel.replace("timeStep = δt;", "timeStep = δt;
+		val okNgenModel = koNgenModel.replace("timeStep = delta_t;", "timeStep = delta_t;
 			iterationMax = maxIter;
 			timeMax = maxTime;")
 
@@ -210,7 +210,7 @@ class NablagenValidatorTest
 		val batiLibModel =
 		'''
 			extension BatiLib;
-			def nextWaveHeight: → real;
+			def real nextWaveHeight();
 		'''
 		val depthInitModel =
 		'''
@@ -222,11 +222,11 @@ class NablagenValidatorTest
 			let real t = 0.0;
 			let real maxTime = 0.1;
 			let int maxIter = 500;
-			let real δt = 1.0;
+			let real delta_t = 1.0;
 			real[2] X{nodes};
-			real η{cells};
+			real nu{cells};
 
-			InitFromFile: ∀j∈cells(), η{j} = nextWaveHeight();
+			InitFromFile: forall j in cells(), nu{j} = nextWaveHeight();
 		'''
 		val appNgenModel =
 		'''
@@ -236,7 +236,7 @@ class NablagenValidatorTest
 			{
 				nodeCoord = X;
 				time = t;
-				timeStep = δt;
+				timeStep = delta_t;
 				iterationMax = maxIter;
 				timeMax = maxTime;
 			}
@@ -283,8 +283,8 @@ class NablagenValidatorTest
 
 			itemtypes { node, cell }
 
-			connectivity nodes: → {node};
-			connectivity cells: → {cell};
+			connectivity {node} nodes();
+			connectivity {cell} cells();
 		'''
 
 		val rs = resourceSetProvider.get

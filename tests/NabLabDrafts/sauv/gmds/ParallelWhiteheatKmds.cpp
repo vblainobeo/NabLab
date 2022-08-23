@@ -120,9 +120,9 @@ public:
 
 private:
 	/**
-	 * Job Init_δt @-1.0
+	 * Job Init_delta_t @-1.0
 	 * In variables:
-	 * Out variables: δt
+	 * Out variables: delta_t
 	 */
 	void init_deltat()
 	{
@@ -144,7 +144,7 @@ private:
 		});
 	}
 	
-	// δt = 1/4 * ∑{j∈cells()}(V{j})
+	// delta_t = 1/4 * ∑{j in cells()}(V{j})
 	void bidonVolume()
 	{
 	    // kmds::GrowingView<kmds::TCellID> cells("CELLS", mesh.getNbFaces());
@@ -157,7 +157,7 @@ private:
 		double bidon = 1/4 * sum;
 	}
 
-	// ∀j∈cells(),∀r∈nodesOfCell(j), C_ic{j,r} = 0.5 * norm(X{r});
+	// forall j in cells(),forall r in nodesOfCell(j), C_ic{j,r} = 0.5 * norm(X{r});
 	void bidonDoubleBoucle()
 	{
 	    // kmds::GrowingView<kmds::TCellID> cells("CELLS", mesh.getNbFaces());
@@ -279,7 +279,7 @@ private:
 
 	/**
 	 * Job ComputeTmp @1.0
-	 * In variables: δt, V, u, center, surface
+	 * In variables: delta_t, V, u, center, surface
 	 * Out variables: tmp
 	 */
 	void computeTmp()
@@ -305,7 +305,7 @@ private:
 
 	/**
 	 * Job Compute_ComputeUnPlus1 @2.0
-	 * In variables: f, δt, u, tmp
+	 * In variables: f, delta_t, u, tmp
 	 * Out variables: u_n_plus_1
 	 */
 	void compute_ComputeUn()
@@ -332,7 +332,7 @@ private:
 
 	/**
 	 * Job Compute_ComputeTn @1.0
-	 * In variables: t, δt
+	 * In variables: t, delta_t
 	 * Out variables: t_n_plus_1
 	 */
 	void compute_ComputeTn()
