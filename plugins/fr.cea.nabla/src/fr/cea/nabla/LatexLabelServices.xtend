@@ -26,7 +26,6 @@ import fr.cea.nabla.nabla.Exit
 import fr.cea.nabla.nabla.Expression
 import fr.cea.nabla.nabla.Function
 import fr.cea.nabla.nabla.FunctionCall
-import fr.cea.nabla.nabla.FunctionTypeDeclaration
 import fr.cea.nabla.nabla.If
 import fr.cea.nabla.nabla.InitTimeIteratorRef
 import fr.cea.nabla.nabla.Instruction
@@ -62,6 +61,9 @@ import fr.cea.nabla.nabla.VarGroupDeclaration
 import fr.cea.nabla.nabla.VectorConstant
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import fr.cea.nabla.nabla.FunctionInTypeDeclaration
+import fr.cea.nabla.nabla.FunctionReturnTypeDeclaration
+import java.util.Iterator
 
 class LatexLabelServices
 {
@@ -112,10 +114,10 @@ class LatexLabelServices
 	static def dispatch String getLatex(NextTimeIteratorRef it) { target?.name.transformString + '+' + value }
 
 	/* FONCTIONS / REDUCTIONS ********************************/
-	static def dispatch String getLatex(Function it) { 'def ' + name.transformString + '~:~' + getLatex(variables, typeDeclaration) }
-	static def dispatch String getLatex(Reduction it) { 'def ' + name.transformString + ',~' + seed?.latex + '~:~' + getLatex(variables, typeDeclaration) }
+	static def dispatch String getLatex(Function it) { 'def ' + name.transformString + '~:~' + getLatex(variables, it.intypesDeclaration, it.returnTypeDeclaration) }
+	static def dispatch String getLatex(Reduction it) { 'red ' + name.transformString + ',~' + seed?.latex + '~:~' + getLatex(variables, typeDeclaration) }
 
-	private static def String getLatex(List<SimpleVar> vars, FunctionTypeDeclaration td)
+	private static def String getLatex(List<SimpleVar> vars, List<FunctionInTypeDeclaration> itd, FunctionReturnTypeDeclaration rtd)
 	{
 		var ret = ''
 		if (vars !== null)
@@ -123,10 +125,13 @@ class LatexLabelServices
 			ret += vars.map[name.transformString].join(', ')
 			if (!vars.empty) ret += '~|~'
 		}
-		if (td !== null)
+		if (itd !== null && itd.size > 0)
 		{
-			ret += td.inTypes?.map[latex].join(' \u00D7 ')
-			ret += ' \u2192 ' + td.returnType?.latex
+			ret += itd.map[inTypes.latex].join(' \u00D7 ')
+		}
+		if (rtd !== null)
+		{
+			ret += ' \u2192 ' + rtd.returnType?.latex
 		}
 		return ret
 	}
