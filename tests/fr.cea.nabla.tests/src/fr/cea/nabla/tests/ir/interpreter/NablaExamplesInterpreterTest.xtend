@@ -143,7 +143,7 @@ class NablaExamplesInterpreterTest
 		handler.close
 
 		Assert.assertTrue("LevelDB Compare Error", context.levelDBCompareResult)
-		testNoGitDiff("/" + moduleName.toLowerCase)
+		testNoGitDiff(Pattern.quote(File.separator) + moduleName.toLowerCase)
 	}
 
 	private def testNoGitDiff(String moduleName)
