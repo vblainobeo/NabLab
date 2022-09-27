@@ -65,7 +65,7 @@ import org.eclipse.emf.ecore.EObject
 
 class LatexLabelServices
 {
-	public static val String[] GrecLetter = #['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta',
+	public static val String[] GreekLetter = #['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta', 'Eta', 'Theta',
 		'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi',
 		'Psi', 'Omega', 'alpha', 'beta', 'gamma', 'delta', 'epsilon', 'zeta', 'eta', 'theta', 'iota', 'kappa', 'lambda',
 		'mu', 'nu', 'xi', 'omicron', 'pi', 'rho', 'sigma', 'tau', 'upsilon', 'phi', 'chi', 'psi', 'omega']
@@ -112,8 +112,8 @@ class LatexLabelServices
 	static def dispatch String getLatex(NextTimeIteratorRef it) { target?.name.transformString + '+' + value }
 
 	/* FONCTIONS / REDUCTIONS ********************************/
-	static def dispatch String getLatex(Function it) { 'def ' + name.transformString + '~:~' + getLatex(variables, typeDeclaration) }
-	static def dispatch String getLatex(Reduction it) { 'def ' + name.transformString + ',~' + seed?.latex + '~:~' + getLatex(variables, typeDeclaration) }
+	static def dispatch String getLatex(Function it) { 'def~ ' + name.transformString + '~:~' + getLatex(variables, typeDeclaration) }
+	static def dispatch String getLatex(Reduction it) { 'def~ ' + name.transformString + ',~' + seed?.latex + '~:~' + getLatex(variables, typeDeclaration) }
 
 	private static def String getLatex(List<SimpleVar> vars, FunctionTypeDeclaration td)
 	{
@@ -125,8 +125,8 @@ class LatexLabelServices
 		}
 		if (td !== null)
 		{
-			ret += td.inTypes?.map[latex].join(' \u00D7 ')
-			ret += ' \u2192 ' + td.returnType?.latex
+			ret += td.inTypes?.map[latex].join(' \\times ')
+			ret += ' \\rightarrow ' + td.returnType?.latex
 		}
 		return ret
 	}
@@ -161,8 +161,8 @@ class LatexLabelServices
 	static def dispatch String getLatex(IntConstant it) { value.toString }
 	static def dispatch String getLatex(RealConstant it) { value.toString }
 	static def dispatch String getLatex(BoolConstant it) { value.toString }
-	static def dispatch String getLatex(MinConstant it) { '-\u221E' }
-	static def dispatch String getLatex(MaxConstant it) { '\u221E' }
+	static def dispatch String getLatex(MinConstant it) { '-\\infty' }
+	static def dispatch String getLatex(MaxConstant it) { '\\infty' }
 
 	static def dispatch String getLatex(FunctionCall it) 
 	{ 
@@ -198,7 +198,7 @@ class LatexLabelServices
 	}
 
 	/* TYPES *************************************************/
-		static def dispatch String getLatex(PrimitiveType it) 
+	static def dispatch String getLatex(PrimitiveType it)
 	{
 		switch it
 		{ 
@@ -245,9 +245,9 @@ class LatexLabelServices
 		while(ite.hasNext)
 		{
 			val subString = ite.next
-			if (GrecLetter.contains(substring(0, subString.length()-1)) && subString.substring(subString.length() -1) == '_' && ite.hasNext)
+			if (GreekLetter.contains(substring(0, subString.length()-1)) && subString.substring(subString.length() -1) == '_' && ite.hasNext)
 				splitRet.add('\\'+ subString.substring(0, subString.length()-1) + ' ')
-			else if(GrecLetter.contains(subString)) 
+			else if(GreekLetter.contains(subString)) 
 				splitRet.add('\\'+ subString)
 			else
 				splitRet.add(subString)
