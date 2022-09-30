@@ -80,7 +80,7 @@ abstract class GenerateAndExecuteTestBase
 			models += readFileAsString(Paths.get(GenerateAndExecuteTestBase.projectAbsolutePath, "src", packageName, nFileName + ".n").toString)
 		var genmodel = readFileAsString(Paths.get(GenerateAndExecuteTestBase.projectAbsolutePath, "src", packageName, ngenFileName + ".ngen").toString)
 		compilationHelper.generateCode(models, genmodel, GenerateAndExecuteTestBase.projectAbsolutePath.replace(File.separator + projectName, ''), projectName)
-		testNoGitDiff(separatorPattern + packageName) // Add a separator to avoid a false positiv on explicitheatequation fail or implicitheatequation
+		testNoGitDiff("/" + packageName) // Add a separator to avoid a false positiv on explicitheatequation fail or implicitheatequation
 	}
 
 	protected def testExecuteModule(String moduleName)
