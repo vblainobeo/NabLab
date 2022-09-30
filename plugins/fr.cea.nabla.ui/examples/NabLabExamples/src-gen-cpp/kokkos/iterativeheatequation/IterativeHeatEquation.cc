@@ -158,7 +158,7 @@ IterativeHeatEquation::jsonInit(const char* jsonContent)
 	const rapidjson::Value& valueof_maxIterations = options["maxIterations"];
 	assert(valueof_maxIterations.IsInt());
 	maxIterations = valueof_maxIterations.GetInt();
-	delta_t = 0.001;
+	deltat = 0.001;
 
 	// Copy node coordinates
 	const auto& gNodes = mesh.getGeometry()->getNodes();
@@ -198,12 +198,12 @@ void IterativeHeatEquation::computeFaceLength() noexcept
 
 /**
  * Job computeTn called @1.0 in executeTimeLoopN method.
- * In variables: delta_t, t_n
+ * In variables: deltat, t_n
  * Out variables: t_nplus1
  */
 void IterativeHeatEquation::computeTn() noexcept
 {
-	t_nplus1 = t_n + delta_t;
+	t_nplus1 = t_n + deltat;
 }
 
 /**
@@ -322,7 +322,7 @@ void IterativeHeatEquation::updateU() noexcept
 /**
  * Job computeDeltaTn called @2.0 in simulate method.
  * In variables: D, V
- * Out variables: delta_t
+ * Out variables: deltat
  */
 void IterativeHeatEquation::computeDeltaTn() noexcept
 {
@@ -331,7 +331,7 @@ void IterativeHeatEquation::computeDeltaTn() noexcept
 	{
 		accu = iterativeheatequationfreefuncs::minR0(accu, V(cCells) / D(cCells));
 	}, KokkosJoiner<double>(reduction0, double(numeric_limits<double>::max()), &iterativeheatequationfreefuncs::minR0));
-	delta_t = reduction0 * 0.1;
+	deltat = reduction0 * 0.1;
 }
 
 /**
@@ -443,7 +443,7 @@ void IterativeHeatEquation::setUpTimeLoopN() noexcept
 
 /**
  * Job computeAlphaCoeff called @3.0 in simulate method.
- * In variables: V, Xc, delta_t, faceConductivity, faceLength
+ * In variables: V, Xc, deltat, faceConductivity, faceLength
  * Out variables: alpha
  */
 void IterativeHeatEquation::computeAlphaCoeff() noexcept
@@ -451,7 +451,7 @@ void IterativeHeatEquation::computeAlphaCoeff() noexcept
 	Kokkos::parallel_for(nbCells, KOKKOS_LAMBDA(const size_t& cCells)
 	{
 		const Id cId(cCells);
-		double alpha_Diag(0.0);
+		double alphaDiag(0.0);
 		{
 			const auto neighbourCellsC(mesh.getNeighbourCells(cId));
 			const size_t nbNeighbourCellsC(neighbourCellsC.size());
@@ -461,12 +461,12 @@ void IterativeHeatEquation::computeAlphaCoeff() noexcept
 				const size_t dCells(dId);
 				const Id fId(mesh.getCommonFace(cId, dId));
 				const size_t fFaces(fId);
-				const double alpha_ExtraDiag(delta_t / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / iterativeheatequationfreefuncs::norm(iterativeheatequationfreefuncs::operatorSub(Xc(cCells), Xc(dCells))));
-				alpha(cCells, dCells) = alpha_ExtraDiag;
-				alpha_Diag = alpha_Diag + alpha_ExtraDiag;
+				const double alphaExtraDiag(deltat / V(cCells) * (faceLength(fFaces) * faceConductivity(fFaces)) / iterativeheatequationfreefuncs::norm(iterativeheatequationfreefuncs::operatorSub(Xc(cCells), Xc(dCells))));
+				alpha(cCells, dCells) = alphaExtraDiag;
+				alphaDiag = alphaDiag + alphaExtraDiag;
 			}
 		}
-		alpha(cCells, cCells) = -alpha_Diag;
+		alpha(cCells, cCells) = -alphaDiag;
 	});
 }
 
@@ -530,7 +530,7 @@ void IterativeHeatEquation::executeTimeLoopN() noexcept
 		// Progress
 		std::cout << progress_bar(n, maxIterations, t_n, stopTime, 25);
 		std::cout << __BOLD__ << __CYAN__ << Timer::print(
-			eta(n, maxIterations, t_n, stopTime, delta_t, globalTimer), true)
+			eta(n, maxIterations, t_n, stopTime, deltat, globalTimer), true)
 			<< __RESET__ << "\r";
 		std::cout.flush();
 	

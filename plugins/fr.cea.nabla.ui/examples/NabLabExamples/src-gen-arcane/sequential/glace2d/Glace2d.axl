@@ -149,8 +149,8 @@
 			need-sync="true"/>
 		
 		<variable
-			field-name="delta_tj"
-			name="delta_tj"
+			field-name="deltatj"
+			name="deltatj"
 			data-type="real"
 			item-kind="cell"
 			dim="0"
