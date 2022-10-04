@@ -80,7 +80,7 @@ class InstructionContentProvider
 				«left.content» = «right.content»;
 				«val irRoot = IrUtils.getContainerOfType(it, IrRoot)»
 				«IF irRoot !== null && irRoot.timeStepVariable == left.target»
-				m_global_delta_t = «left.content»;
+				m_global_deltat = «left.content»;
 				«ENDIF»
 			'''
 	}
