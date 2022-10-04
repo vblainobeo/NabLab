@@ -37,7 +37,7 @@ void IterationModule::init()
 	m_l = 0;
 
 	// constant time step
-	m_global_delta_t = m_delta_t;
+	m_global_deltat = m_delta_t;
 
 	// calling jobs
 	iniTime(); // @1.0

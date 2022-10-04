@@ -34,7 +34,7 @@ void HydroModule::init()
 	// initialization of other attributes
 
 	// constant time step
-	m_global_delta_t = options()->deltaT();
+	m_global_deltat = options()->deltaT();
 
 	// calling jobs
 	iniHv1(); // @1.0

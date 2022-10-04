@@ -315,7 +315,7 @@ void IterativeHeatEquationModule::computeDeltaTn()
 		reduction0 = reducer.reduce();
 	}
 	m_delta_t = reduction0 * 0.1;
-	m_global_delta_t = m_delta_t;
+	m_global_deltat = m_delta_t;
 }
 
 /**

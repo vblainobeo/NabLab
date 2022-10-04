@@ -87,7 +87,7 @@ void HeatEquationModule::init()
 	m_n = 0;
 
 	// constant time step
-	m_global_delta_t = m_delta_t;
+	m_global_deltat = m_delta_t;
 
 	// calling jobs
 	computeSurface(); // @1.0

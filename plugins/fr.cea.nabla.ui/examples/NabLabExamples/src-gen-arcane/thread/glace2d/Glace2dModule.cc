@@ -684,7 +684,7 @@ void Glace2dModule::computeDt()
 		reduction0 = glace2dfreefuncs::minR0(reduction0, m_delta_tj[jCells]);
 	}
 	m_delta_t = std::min((m_delta_tCfl * reduction0), (options()->stopTime() - m_t_n));
-	m_global_delta_t = m_delta_t;
+	m_global_deltat = m_delta_t;
 }
 
 /**
