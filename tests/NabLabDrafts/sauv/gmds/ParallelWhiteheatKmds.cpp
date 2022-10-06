@@ -53,7 +53,7 @@ private:
 	int nbNodes, nbCells, nbFaces;
 
 	// Global Variables
-	double t, deltat, t_n_plus_1;
+	double t, delta_t, t_n_plus_1;
 
 	// Node Variables
 	kmds::Variable<Real2>* X;
@@ -120,13 +120,13 @@ public:
 
 private:
 	/**
-	 * Job Init_delta_t @-1.0
+	 * Job Init_deltat @-1.0
 	 * In variables:
 	 * Out variables: delta_t
 	 */
 	void init_deltat()
 	{
-		deltat = 0.001;
+		delta_t = 0.001;
 	}
 
 	/**
@@ -298,7 +298,7 @@ private:
 				int j2Cells = j2Id; // int j2Cells = cells.indexOf(j2Id);
 				sum1 += (((*u)[j2Cells] - (*u)[j1Cells]) / (norm((*center)[j2Cells] -(*center)[j1Cells])) * (*surface)[mesh.getCommonFace(j1Id, j2Id)]);
 			}
-			(*tmp)[j1Cells] = deltat / (*V)[j1Cells] * sum1;
+			(*tmp)[j1Cells] = delta_t / (*V)[j1Cells] * sum1;
 		});
 	}
 
@@ -314,7 +314,7 @@ private:
 	    // mesh.getFaceIDs(&cells);
 		Kokkos::parallel_for(mesh.getNbCells(), KOKKOS_LAMBDA(const int jCells)
 		{
-			(*u_n_plus_1)[jCells] = (*f)[jCells] * deltat + (*u)[jCells] + (*tmp)[jCells];
+			(*u_n_plus_1)[jCells] = (*f)[jCells] * delta_t + (*u)[jCells] + (*tmp)[jCells];
 		});
 	}
 
@@ -337,7 +337,7 @@ private:
 	 */
 	void compute_ComputeTn()
 	{
-		t_n_plus_1 = t + deltat;
+		t_n_plus_1 = t + delta_t;
 	}
 
 	/**
@@ -357,7 +357,7 @@ public:
 	void simulate()
 	{
 		std::cout << "Début de l'exécution du module whiteheat" << std::endl;
-		init_deltat(); // @-1.0
+		init_delta_t(); // @-1.0
 		iniF(); // @-1.0
 		iniCenter(); // @-1.0
 		computeV(); // @-1.0
