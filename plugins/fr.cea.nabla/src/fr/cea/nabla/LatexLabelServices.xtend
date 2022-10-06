@@ -116,7 +116,7 @@ class LatexLabelServices
 	static def dispatch String getLatex(Function it) { 'def~ ' + name.transformString + '~:~' + getLatex(variables, it.intypesDeclaration, it.returnTypeDeclaration) }
 	static def dispatch String getLatex(Reduction it) { 'red~ ' + name.transformString + ',~' + seed?.latex + '~:~' + getLatex(variables, typeDeclaration) }
 
-	private static def String getLatex(List<SimpleVar> vars, FunctionTypeDeclaration td)
+	private static def String getLatex(List<SimpleVar> vars, List<FunctionInTypeDeclaration> itd, FunctionReturnTypeDeclaration rtd)
 	{
 		var ret = ''
 		if (vars !== null)
