@@ -45,7 +45,7 @@ class NablaExamplesInterpreterTest
 	static String examplesProjectPath
 	static GitUtils git
 	LocalDateTime startTime
-	static IrUtils.NonRegressionValues nonRegressionValue = IrUtils.NonRegressionValues.CreateReference
+	static IrUtils.NonRegressionValues nonRegressionValue = IrUtils.NonRegressionValues.CompareToReference
 	static double nonRegressionTolerance = 0.0
 
 	@Inject CompilationChainHelper compilationHelper
