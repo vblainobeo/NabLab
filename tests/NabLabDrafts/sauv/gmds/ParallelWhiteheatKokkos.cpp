@@ -91,7 +91,7 @@ private:
 		});
 	}
 	
-	// δt = 1/4 * ∑{j∈cells()}(V{j})
+	// delta_t = 1/4 * ∑{j∈cells()}(V{j})
 	void bidonVolume()
 	{
 		double sum = 0.0;
